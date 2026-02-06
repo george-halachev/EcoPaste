@@ -7,8 +7,53 @@ import {
 } from "unocss";
 
 export default defineConfig({
-  presets: [presetUno(), presetIcons()],
+  presets: [
+    presetUno(),
+    presetIcons({
+      collections: {
+        hugeicons: () =>
+          import("@iconify-json/hugeicons/icons.json").then((m) => m.default),
+        iconamoon: () =>
+          import("@iconify-json/iconamoon/icons.json").then((m) => m.default),
+        "lets-icons": () =>
+          import("@iconify-json/lets-icons/icons.json").then((m) => m.default),
+        logos: () =>
+          import("@iconify-json/logos/icons.json").then((m) => m.default),
+        lucide: () =>
+          import("@iconify-json/lucide/icons.json").then((m) => m.default),
+        "simple-icons": () =>
+          import("@iconify-json/simple-icons/icons.json").then(
+            (m) => m.default,
+          ),
+        "skill-icons": () =>
+          import("@iconify-json/skill-icons/icons.json").then((m) => m.default),
+      },
+    }),
+  ],
   rules: [["outline-none", { outline: "none" }]],
+  safelist: [
+    "i-hugeicons:database-export",
+    "i-hugeicons:database-import",
+    "i-hugeicons:task-edit-01",
+    "i-iconamoon:close-circle-1",
+    "i-iconamoon:star",
+    "i-iconamoon:star-fill",
+    "i-iconamoon:volume-up-light",
+    "i-lets-icons:pin",
+    "i-lets-icons:setting-alt-line",
+    "i-lucide:bolt",
+    "i-lucide:circle-arrow-right",
+    "i-lucide:circle-check",
+    "i-lucide:clipboard-list",
+    "i-lucide:clipboard-paste",
+    "i-lucide:clipboard-pen-line",
+    "i-lucide:copy",
+    "i-lucide:history",
+    "i-lucide:info",
+    "i-lucide:keyboard",
+    "i-lucide:search",
+    "i-lucide:trash",
+  ],
   shortcuts: [
     [/^bg-color-(\d+)$/, ([, d]) => `bg-bg-${d}`],
     [/^text-color-(\d+)$/, ([, d]) => `text-text-${d}`],
