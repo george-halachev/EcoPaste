@@ -1,9 +1,6 @@
 use super::wait;
-use enigo::{
-    Direction::{Click, Press, Release},
-    Enigo, Key, Keyboard, Settings,
-};
 use std::ffi::OsString;
+use std::mem;
 use std::os::windows::ffi::OsStringExt;
 use std::ptr;
 use std::sync::Mutex;
@@ -12,8 +9,10 @@ use tauri_plugin_eco_window::MAIN_WINDOW_TITLE;
 use winapi::shared::minwindef::DWORD;
 use winapi::shared::windef::{HWINEVENTHOOK, HWND};
 use winapi::um::winuser::{
-    GetWindowTextLengthW, GetWindowTextW, SetForegroundWindow, SetWinEventHook,
+    GetWindowTextLengthW, GetWindowTextW, SendInput, SetForegroundWindow, SetWinEventHook,
+    INPUT, INPUT_KEYBOARD, KEYBDINPUT, KEYEVENTF_KEYUP,
     EVENT_SYSTEM_FOREGROUND, WINEVENT_OUTOFCONTEXT,
+    VK_CONTROL, VK_LWIN, VK_MENU, VK_RWIN, VK_SHIFT, VK_INSERT,
 };
 
 static PREVIOUS_WINDOW: Mutex<Option<isize>> = Mutex::new(None);
@@ -99,17 +98,50 @@ fn focus_previous_window() {
     }
 }
 
+fn make_key_input(vk: u16, flags: u32) -> INPUT {
+    let mut input: INPUT = unsafe { mem::zeroed() };
+    input.type_ = INPUT_KEYBOARD;
+    unsafe {
+        let ki = input.u.ki_mut();
+        *ki = KEYBDINPUT {
+            wVk: vk,
+            wScan: 0,
+            dwFlags: flags,
+            time: 0,
+            dwExtraInfo: 0,
+        };
+    }
+    input
+}
+
 // 粘贴
 #[command]
 pub async fn paste() {
-    let mut enigo = Enigo::new(&Settings::default()).unwrap();
-
     focus_previous_window();
 
     wait(100);
 
-    enigo.key(Key::Shift, Press).unwrap();
-    // insert 的微软虚拟键码：https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-    enigo.key(Key::Other(0x2D), Click).unwrap();
-    enigo.key(Key::Shift, Release).unwrap();
+    // Release any modifier keys that may still be physically held down,
+    // then send Shift+Insert for paste, all as one atomic SendInput call.
+    let inputs = vec![
+        // Release modifiers that could interfere
+        make_key_input(VK_CONTROL as u16, KEYEVENTF_KEYUP),
+        make_key_input(VK_SHIFT as u16, KEYEVENTF_KEYUP),
+        make_key_input(VK_MENU as u16, KEYEVENTF_KEYUP),
+        make_key_input(VK_LWIN as u16, KEYEVENTF_KEYUP),
+        make_key_input(VK_RWIN as u16, KEYEVENTF_KEYUP),
+        // Shift+Insert (paste)
+        make_key_input(VK_SHIFT as u16, 0),
+        make_key_input(VK_INSERT as u16, 0),
+        make_key_input(VK_INSERT as u16, KEYEVENTF_KEYUP),
+        make_key_input(VK_SHIFT as u16, KEYEVENTF_KEYUP),
+    ];
+
+    unsafe {
+        SendInput(
+            inputs.len() as u32,
+            inputs.as_ptr() as *mut INPUT,
+            mem::size_of::<INPUT>() as i32,
+        );
+    }
 }
