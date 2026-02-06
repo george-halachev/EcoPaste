@@ -109,15 +109,12 @@ const Item: FC<ItemProps> = (props) => {
           "b-primary bg-primary-1": rootState.activeId === id,
         },
       )}
-      gap={4}
+      gap={6}
       onClick={() => handleClick("single")}
       onContextMenu={handleContextMenu}
       onDoubleClick={() => handleClick("double")}
-      vertical
     >
-      <Header {...rest} data={data} handleNote={handleNote} />
-
-      <div className="relative flex-1 select-auto overflow-hidden break-words children:transition">
+      <div className="relative min-w-0 flex-1 select-auto overflow-hidden break-words children:transition">
         <div
           className={clsx(
             "pointer-events-none absolute inset-0 line-clamp-4 children:inline opacity-0",
@@ -144,6 +141,8 @@ const Item: FC<ItemProps> = (props) => {
           {renderContent()}
         </div>
       </div>
+
+      <Header {...rest} data={data} handleNote={handleNote} />
     </Flex>
   );
 };

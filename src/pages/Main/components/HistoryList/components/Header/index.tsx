@@ -5,7 +5,6 @@ import { filesize } from "filesize";
 import { type FC, type MouseEvent, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useSnapshot } from "valtio";
-import Scrollbar from "@/components/Scrollbar";
 import UnoIcon from "@/components/UnoIcon";
 import { MainContext } from "@/pages/Main";
 import { transferData } from "@/pages/Preference/components/Clipboard/components/OperationButton";
@@ -105,22 +104,28 @@ const Header: FC<HeaderProps> = (props) => {
   };
 
   return (
-    <Flex className="text-color-2" gap="small" justify="space-between">
-      <Scrollbar thumbSize={0}>
-        <Flex className="flex-1 whitespace-nowrap text-xs" gap="small">
-          <span>{renderType()}</span>
-          <span>{renderCount()}</span>
-          {renderPixel()}
-          <span>{dayjs(createTime).locale(i18n.language).fromNow()}</span>
-        </Flex>
-      </Scrollbar>
+    <Flex
+      className="w-20 shrink-0 text-color-2"
+      gap={2}
+      justify="space-between"
+      vertical
+    >
+      <div className="flex flex-col gap-0.5 overflow-hidden text-right text-[10px] leading-tight">
+        <span className="truncate">{renderType()}</span>
+        <span className="truncate">{renderCount()}</span>
+        {renderPixel()}
+        <span className="truncate text-color-3">
+          {dayjs(createTime).locale(i18n.language).fromNow()}
+        </span>
+      </div>
 
       <Flex
         align="center"
         className={clsx("opacity-0 transition group-hover:opacity-100", {
           "opacity-100": rootState.activeId === id,
         })}
-        gap={6}
+        gap={4}
+        justify="end"
         onDoubleClick={(event) => event.stopPropagation()}
       >
         {operationButtons.map((item) => {
@@ -135,6 +140,7 @@ const Header: FC<HeaderProps> = (props) => {
               key={key}
               name={isFavorite ? activeIcon : icon}
               onClick={(event) => handleClick(event, key)}
+              size={12}
               title={t(title)}
             />
           );
