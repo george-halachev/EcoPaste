@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import { exists } from "@tauri-apps/plugin-fs";
 import { error as logError, warn as logWarn } from "@tauri-apps/plugin-log";
 import {
@@ -22,6 +23,30 @@ import { clipboardStore } from "@/stores/clipboard";
 import type { DatabaseSchemaHistory } from "@/types/database";
 import { isColor, isEmail, isURL } from "@/utils/is";
 import { paste } from "./paste";
+
+interface WinReadImageResult {
+  path: string;
+  size: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Windows-specific fallback: check if the clipboard contains an image using
+ * direct Windows API (handles CF_DIB, CF_DIBV5, PNG formats that the standard
+ * plugin may miss).
+ */
+const hasClipboardImageWin = (): Promise<boolean> =>
+  invoke<boolean>("has_clipboard_image_win").catch(() => false);
+
+/**
+ * Windows-specific fallback: read an image from the clipboard using direct
+ * Windows API, convert to PNG, and save to disk.
+ */
+const readClipboardImageWin = (): Promise<WinReadImageResult | null> =>
+  invoke<WinReadImageResult | null>("read_clipboard_image_win").catch(
+    () => null,
+  );
 
 export const getClipboardTextSubtype = async (value: string) => {
   try {
@@ -151,6 +176,19 @@ export const readClipboardWithRetry = async (): Promise<ReadClipboard> => {
             value: path,
             ...rest,
           };
+        } else if (await hasClipboardImageWin()) {
+          // Windows fallback: the standard plugin didn't detect the image,
+          // but Windows API sees an image format (e.g. CF_DIB from AHK).
+          const winImage = await readClipboardImageWin();
+          if (winImage && winImage.size > 0) {
+            result.image = {
+              count: winImage.size,
+              height: winImage.height,
+              type: "image",
+              value: winImage.path,
+              width: winImage.width,
+            };
+          }
         }
       } catch (err) {
         logWarn(

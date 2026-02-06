@@ -1,5 +1,7 @@
+mod clipboard_image;
 mod core;
 
+use clipboard_image::{has_clipboard_image_win, read_clipboard_image_win};
 use core::{prevent_default, setup};
 use tauri::{generate_context, Builder, Manager, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
@@ -73,6 +75,10 @@ pub fn run() {
         .plugin(tauri_plugin_eco_paste::init())
         // 自定义判断是否自动启动的插件
         .plugin(tauri_plugin_eco_autostart::init())
+        .invoke_handler(tauri::generate_handler![
+            has_clipboard_image_win,
+            read_clipboard_image_win,
+        ])
         .on_window_event(|window, event| match event {
             // 让 app 保持在后台运行：https://tauri.app/v1/guides/features/system-tray/#preventing-the-app-from-closing
             WindowEvent::CloseRequested { api, .. } => {
