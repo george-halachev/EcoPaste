@@ -19,6 +19,8 @@
       }
     },
     "hints": {
+      "clipboard_process_failed": "クリップボードの処理に失敗しました。",
+      "clipboard_read_failed": "クリップボードの読み取りに失敗しました。他のアプリが使用中の可能性があります。",
       "delete_modal_content": "本当に削除しますか？",
       "search_placeholder": "検索"
     },

@@ -19,6 +19,8 @@
       }
     },
     "hints": {
+      "clipboard_process_failed": "处理剪贴板内容失败。",
+      "clipboard_read_failed": "读取剪贴板内容失败，剪贴板可能被其他应用占用。",
       "delete_modal_content": "确定要删除此项吗？",
       "search_placeholder": "搜索"
     },

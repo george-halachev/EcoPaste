@@ -19,6 +19,8 @@
       }
     },
     "hints": {
+      "clipboard_process_failed": "處理剪貼簿內容失敗。",
+      "clipboard_read_failed": "讀取剪貼簿內容失敗，剪貼簿可能被其他應用程式佔用。",
       "delete_modal_content": "確定要删除此項嗎？",
       "search_placeholder": "搜尋"
     },
