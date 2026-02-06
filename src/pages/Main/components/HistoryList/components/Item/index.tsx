@@ -109,7 +109,7 @@ const Item: FC<ItemProps> = (props) => {
           "b-primary bg-primary-1": rootState.activeId === id,
         },
       )}
-      gap={16}
+      gap={32}
       onClick={() => handleClick("single")}
       onContextMenu={handleContextMenu}
       onDoubleClick={() => handleClick("double")}
