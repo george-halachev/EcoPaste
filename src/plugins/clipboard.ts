@@ -168,17 +168,31 @@ export const readClipboardWithRetry = async (): Promise<ReadClipboard> => {
       }
 
       try {
+        let imageReadFailed = false;
+
         if (await hasImage()) {
-          const { path, size, ...rest } = await readImage();
-          result.image = {
-            count: size,
-            type: "image",
-            value: path,
-            ...rest,
-          };
-        } else if (await hasClipboardImageWin()) {
-          // Windows fallback: the standard plugin didn't detect the image,
-          // but Windows API sees an image format (e.g. CF_DIB from AHK).
+          try {
+            const { path, size, ...rest } = await readImage();
+            result.image = {
+              count: size,
+              type: "image",
+              value: path,
+              ...rest,
+            };
+          } catch (pluginErr) {
+            logWarn(
+              `readClipboard: standard plugin failed to read image (attempt ${attempt}): ${String(pluginErr)}`,
+            );
+            imageReadFailed = true;
+          }
+        }
+
+        // Windows fallback: try direct Windows API when the standard plugin
+        // either didn't detect the image or failed to read it.
+        if (
+          !result.image &&
+          (imageReadFailed || (await hasClipboardImageWin()))
+        ) {
           const winImage = await readClipboardImageWin();
           if (winImage && winImage.size > 0) {
             result.image = {
