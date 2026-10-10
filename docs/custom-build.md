@@ -92,6 +92,10 @@ schema change, restore the matching pre-upgrade data backup as well as the old
 binary; do not open a newer schema with an older binary unless upstream supports
 that downgrade.
 
+The installed NSIS payload has Tauri's `__TAURI_BUNDLE_TYPE_VAR_NSS` marker;
+the standalone build EXE has `__TAURI_BUNDLE_TYPE_VAR_UNK`. Their raw SHA-256
+hashes differ even when the remaining executable bytes are identical.
+
 ## Initial customization
 
 `ClipboardCard` keeps the source-app icon and content in its flexible left
