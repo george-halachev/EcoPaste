@@ -136,7 +136,7 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
     <div
       aria-selected={isSelected}
       className={cn(
-        "relative flex flex-col gap-1 overflow-hidden rounded-2 border border-ant-border-secondary p-2 transition-colors duration-150 ease-out motion-reduce:transition-none",
+        "relative flex gap-2 overflow-hidden rounded-2 border border-ant-border-secondary p-2 transition-colors duration-150 ease-out motion-reduce:transition-none",
         {
           "border-ant-primary bg-ant-blue-1": isSelected,
           "border-ant-primary bg-ant-container": item.isPinned && !isSelected,
@@ -155,8 +155,8 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
       role="option"
       tabIndex={-1}
     >
-      <div className="flex items-center justify-between text-ant-secondary text-xs">
-        <div className="flex min-w-0 items-center gap-1 overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex h-6 items-center">
           {hintKey ? (
             <KeyHint hintKey={hintKey} onKeyPress={onQuickPaste}>
               {sourceAppIcon}
@@ -164,8 +164,25 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
           ) : (
             sourceAppIcon
           )}
+        </div>
 
-          <span className="truncate">{typeLabel}</span>
+        {item.note ? (
+          <NoteContentSwitcher
+            note={item.note}
+            showOriginal={showOriginalOnHover && hovered}
+          >
+            {body}
+          </NoteContentSwitcher>
+        ) : (
+          body
+        )}
+      </div>
+
+      <div className="flex max-w-1/2 shrink-0 flex-col items-end gap-1 text-right text-ant-secondary text-xs">
+        <div className="flex h-6 max-w-full items-center">
+          <span className="truncate" title={typeLabel}>
+            {typeLabel}
+          </span>
         </div>
 
         <ClipboardQuickActions
@@ -175,21 +192,11 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
           quickActions={quickActions}
           visible={hovered}
         />
-      </div>
 
-      {item.note ? (
-        <NoteContentSwitcher
-          note={item.note}
-          showOriginal={showOriginalOnHover && hovered}
-        >
-          {body}
-        </NoteContentSwitcher>
-      ) : (
-        body
-      )}
-      {showStatusIndicators
-        ? renderStatusIndicators(item.isPinned, showSensitiveIndicator)
-        : null}
+        {showStatusIndicators
+          ? renderStatusIndicators(item.isPinned, showSensitiveIndicator)
+          : null}
+      </div>
     </div>
   );
 };
@@ -199,7 +206,7 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
  */
 function renderStatusIndicators(isPinned: boolean, isSensitive: boolean) {
   return (
-    <div className="pointer-events-none absolute right-2 bottom-2 flex items-end gap-1 text-ant-quaternary">
+    <div className="pointer-events-none mt-auto flex items-end gap-1 text-ant-quaternary">
       {isPinned ? (
         <i aria-hidden="true" className="i-ph:push-pin-bold size-5" />
       ) : null}

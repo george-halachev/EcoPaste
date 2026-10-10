@@ -115,6 +115,19 @@ and keeps action availability backend-owned.
 Drag-out starts through `startDragClipboardItem`; the frontend prevents the
 browser drag default and lets Rust own platform drag behavior.
 
+## Clipboard Card Metadata
+
+`ClipboardCard` uses a flexible `min-w-0` left column for the source-app icon and
+content. A separate right-aligned column places the translated clip type above
+`ClipboardQuickActions`. Keep the type visible when hover replaces the date
+with actions. Verify both a wide window and the 360px minimum width, including
+long dates and note/original transitions, because action width reduces the
+available content width.
+
+Pinned and sensitive status icons occupy a separate row in this metadata
+column, below the date/actions. An absolute bottom-right watermark overlaps
+the date on short cards after moving the type into this column.
+
 ## Accessibility
 
 Use semantic roles and stable focus behavior where the UI is custom:
