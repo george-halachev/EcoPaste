@@ -25,6 +25,70 @@ When adding a setting, update:
   `src/pages/Preference/services/preferenceSettings.ts` when OS state changes
   immediately.
 
+### Monochrome Application Icon
+
+#### 1. Scope / Trigger
+
+`app_icon` owns native icon refresh on startup, appearance changes, reset,
+settings import, storage moves, window creation/show, and system theme changes.
+React renders the same saved style through `AppIcon`.
+
+#### 2. Signatures
+
+- Rust: `Appearance.icon_style: IconStyle`, `Outline | Solid`.
+- JSON/TypeScript: `appearance.iconStyle: "outline" | "solid"`.
+- Existing `update_settings` and `settings://updated` carry the field.
+- Native entry points: `app_icon::apply`, `apply_window`, `watch_system_theme`.
+
+#### 3. Contracts
+
+- Missing fields default to outline through serde; persistence stays atomic.
+- SVG sources generate committed PNG/ICO assets with `pnpm build:icon`.
+- Window icons follow the app theme; Windows tray/taskbar icons follow the
+  shell theme even when the app has a forced theme. Watch registry notifications
+  rather than polling. macOS uses a template tray image and NSApplication Dock
+  icon; macOS native behavior needs validation on a Mac.
+- Windows relaunch icon properties use the configured AppUserModelID and ICOs
+  in the fixed bootstrap `state/app-icons` directory. Embedded EXE resources
+  remain the build-time outline default.
+- Refresh existing shell links only after their resolved target matches the
+  current executable. Preserve arguments, description, and other link fields;
+  notify Explorer about individual changed links. Never clear the global cache.
+- Serialize shortcut refreshes and read current settings after acquiring the
+  lock, so an older queued refresh cannot overwrite a newer selection.
+
+#### 4. Validation & Error Matrix
+
+- Unknown enum literal -> settings update rejected before persistence.
+- Missing icon -> embedded decode error logged with native surface context.
+- Protected shortcut -> warn and continue; other shortcuts still refresh.
+- Window/main-thread dispatch error -> warn without corrupting saved settings.
+
+#### 5. Good / Base / Bad Cases
+
+- Good: changing to solid refreshes open windows, tray, and matching shortcuts;
+  restarting or recreating a window keeps solid.
+- Base: existing settings without iconStyle load outline, preserving all fields.
+- Bad: updating links for another app, rewriting the running EXE, or using app
+  theme for the tray while Windows has a different shell theme.
+
+#### 6. Tests Required
+
+- Decode both styles with transparent monochrome pixels; verify distinct data.
+- Round-trip valid settings, default old settings, reject invalid values.
+- Exercise a real temporary COM shortcut, checking argument preservation and
+  byte-for-byte preservation of a different application's shortcut.
+- Frontend lint/types, Rust fmt/clippy/tests, release build, actual preference
+  control in both themes, and installed Windows style/persistence checks.
+
+#### 7. Wrong vs Correct
+
+Wrong: load every shortcut writable or attempt mutation after `STGM_READ`.
+
+Correct: load with `STGM_READ`, confirm exact target identity, then reload only
+the matching shortcut with `STGM_READWRITE` before updating and saving. The real
+COM test catches access-mode mistakes that a path-only test cannot detect.
+
 ### Window Open Selection Settings
 
 #### 1. Scope / Trigger

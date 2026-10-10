@@ -14,6 +14,7 @@ import {
   type UpdateDownloadProgress,
   type UpdateMetadata,
 } from "@/commands";
+import AppIcon from "@/components/AppIcon";
 import { TAURI_EVENT } from "@/constants/events";
 import { WINDOW_LABEL } from "@/constants/windows";
 import { useTauriListen } from "@/hooks/useTauriListen";
@@ -194,11 +195,7 @@ const Update: FC = () => {
       <main className="flex min-h-0 flex-1 flex-col px-7 pt-12 pb-5">
         <div className="grid min-h-0 grid-cols-[4.5rem_minmax(0,1fr)] gap-5">
           <div className="flex justify-center">
-            <img
-              alt=""
-              className="size-14 shrink-0 rounded-3 object-contain shadow-sm"
-              src="/logo.png"
-            />
+            <AppIcon alt="" className="size-14" />
           </div>
 
           <div className="min-w-0">

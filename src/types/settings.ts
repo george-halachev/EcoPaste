@@ -17,6 +17,9 @@ import type {
 /** Rust enum `Theme`（`rename_all = "lowercase"`）。 */
 export type Theme = "auto" | "light" | "dark";
 
+/** Rust enum `IconStyle` (`rename_all = "lowercase"`). */
+export type IconStyle = "outline" | "solid";
+
 /** Rust enum `Language`（手动 `serde(rename)`）。 */
 export type Language = "zh-CN" | "en-US";
 
@@ -79,6 +82,7 @@ export interface General {
 export interface Appearance {
   theme: Theme;
   language: Language;
+  iconStyle: IconStyle;
 }
 
 export interface Shortcuts {

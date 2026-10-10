@@ -1410,6 +1410,7 @@ fn emit_clipboard_imported(app: &AppHandle) {
 }
 
 fn emit_settings_updated(app: &AppHandle, settings: &crate::settings::Settings) {
+    crate::app_icon::apply(app, settings);
     if let Err(err) = app.emit("settings://updated", settings) {
         log::warn!("emit settings import update failed: {err}");
     }

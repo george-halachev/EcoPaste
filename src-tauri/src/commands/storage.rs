@@ -377,6 +377,7 @@ async fn rebase_storage_states(app: &AppHandle) -> Result<Settings> {
 }
 
 fn emit_settings_updated(app: &AppHandle, settings: &Settings) {
+    crate::app_icon::apply(app, settings);
     if let Err(err) = app.emit(SETTINGS_UPDATED_EVENT, settings) {
         log::warn!("emit settings updated event failed: {err}");
     }

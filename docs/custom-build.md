@@ -28,7 +28,7 @@ pnpm tsc
 node node_modules/@tauri-apps/cli/tauri.js build --config src-tauri/tauri.custom.conf.json --bundles nsis -- --locked
 ```
 
-The custom overlay marks the build as `1.1.0+2` (custom rebuild 2) and disables creation of
+The custom overlay marks the build as `1.1.0+3` (custom rebuild 3) and disables creation of
 signed updater artifacts. This allows a local installer build without upstream's
 private signing key. The EXE and NSIS installer are under
 `src-tauri/target/release/` and `src-tauri/target/release/bundle/nsis/`.
@@ -109,3 +109,25 @@ hashes differ even when the remaining executable bytes are identical.
 Its right column shows the source-app icon beside the translated type label above
 `ClipboardQuickActions`, which shows the date at rest and action buttons on
 hover. Capture, storage, and database contracts are unchanged.
+
+## Monochrome application icon
+
+Preferences > Interface > Appearance & Language > Icon style selects Outline (default) or Solid.
+The saved `appearance.iconStyle` updates application branding, native window
+icons, title bars, tray, Windows taskbar groups, and existing launch shortcuts.
+Windows tray/taskbar contrast follows the system theme; application branding
+and window icons follow the application theme. Changes apply immediately and
+survive restart, window recreation, settings import, and reset.
+
+The SVG sources are `public/icons/ecopaste-outline.svg` and
+`public/icons/ecopaste-solid.svg`. `pnpm build:icon` deterministically generates
+transparent PNGs and multi-resolution ICOs in `src-tauri/assets/app-icons` and
+the default bundle icons. Run it after editing SVG geometry and before Rust
+checks that embed those assets. Keep generated runtime assets committed.
+
+Windows launch shortcuts are changed only if they point to the exact running
+EcoPaste executable. Their selected ICO lives in the fixed bootstrap directory
+under `state/app-icons`, so moving clipboard data does not break icon paths.
+The icon embedded in the EXE itself and displayed for that file in Explorer is
+the build-time outline default; the setting changes runtime and shortcut icons
+without rewriting the executable. Explorer may cache icons on existing pins.

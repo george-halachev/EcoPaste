@@ -191,6 +191,14 @@
           "description": "Limit how many files are shown in each file record card.",
           "title": "Maximum Files Shown"
         },
+        "iconStyle": {
+          "description": "Choose the monochrome EcoPaste icon used in the app, tray, taskbar, title bars, and shortcuts.",
+          "options": {
+            "outline": "Outline",
+            "solid": "Solid"
+          },
+          "title": "Icon style"
+        },
         "imageMaxHeight": {
           "description": "Limit thumbnail height for image records in the list.",
           "title": "Maximum Image Height"

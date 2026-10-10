@@ -16,6 +16,7 @@ const SETTING_ICON_MAP: Record<string, string> = {
   "actions.deletePinnedItems": "i-ph:push-pin-slash-bold",
   "actions.visible": "i-lucide:square-mouse-pointer",
   "appearance.fileMaxCount": "i-lucide:files",
+  "appearance.iconStyle": "i-lucide:shapes",
   "appearance.imageMaxHeight": "i-lucide:image",
   "appearance.language": "i-lucide:languages",
   "appearance.showOriginalPreview": "i-lucide:mouse-pointer-2",

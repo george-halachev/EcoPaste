@@ -545,6 +545,18 @@ export const preferenceTabs: PreferenceTab[] = [
           },
           {
             control: {
+              options: [{ value: "outline" }, { value: "solid" }],
+              type: "segmented",
+            },
+            id: "appearance.iconStyle",
+            keywords: ["icon", "outline", "solid", "tray", "taskbar", "fluent"],
+            path: ["appearance", "iconStyle"],
+            value: (settings) => {
+              return settings.appearance.iconStyle;
+            },
+          },
+          {
+            control: {
               options: LANGUAGE_OPTIONS,
               type: "segmented",
             },

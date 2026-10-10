@@ -191,6 +191,14 @@
           "description": "限制文件记录在列表卡片中最多显示的文件数量。",
           "title": "文件最多显示数量"
         },
+        "iconStyle": {
+          "description": "选择应用、托盘、任务栏、标题栏和快捷方式使用的单色 EcoPaste 图标。",
+          "options": {
+            "outline": "轮廓",
+            "solid": "实心"
+          },
+          "title": "图标样式"
+        },
         "imageMaxHeight": {
           "description": "限制图片记录在列表卡片中的缩略图高度。",
           "title": "图片最大显示高度"

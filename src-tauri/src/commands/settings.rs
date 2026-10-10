@@ -2,7 +2,7 @@ use tauri::{AppHandle, Emitter, Manager};
 
 use crate::core::Result;
 use crate::settings::{Settings, SettingsStore};
-use crate::{admin, autostart, shortcut, tray, window};
+use crate::{admin, app_icon, autostart, shortcut, tray, window};
 
 /// 与前端 `src/constants/events.ts` 的 `TAURI_EVENT.SETTINGS_UPDATED` 一一对应。
 const SETTINGS_UPDATED_EVENT: &str = "settings://updated";
@@ -50,6 +50,10 @@ pub async fn update_settings(app: AppHandle, patch: serde_json::Value) -> Result
                 .is_some_and(|g| g.contains_key("runAsAdmin"))
         })
         .unwrap_or(false);
+    let touches_icon = patch_obj
+        .and_then(|m| m.get("appearance"))
+        .and_then(|v| v.as_object())
+        .is_some_and(|a| a.contains_key("iconStyle") || a.contains_key("theme"));
 
     let next = app.state::<SettingsStore>().update(patch)?;
 
@@ -67,6 +71,10 @@ pub async fn update_settings(app: AppHandle, patch: serde_json::Value) -> Result
 
     if touches_run_as_admin {
         admin::sync_scheduled_task(next.general.run_as_admin);
+    }
+
+    if touches_icon {
+        app_icon::apply(&app, &next);
     }
 
     emit_settings_updated(&app, &next);
@@ -87,6 +95,8 @@ pub async fn reset_settings(app: AppHandle) -> Result<Settings> {
 
 /// 重置后按默认设置同步系统级副作用，失败只记日志，不回滚已落盘设置。
 fn apply_reset_side_effects(app: &AppHandle, settings: &Settings) {
+    app_icon::apply(app, settings);
+
     if let Err(err) = autostart::set_enabled(app, settings.general.auto_start) {
         log::warn!("reset autostart failed: {err}");
     }

@@ -9,6 +9,7 @@ import {
   setClipboardWindowPinned,
   showWindow,
 } from "@/commands";
+import AppIcon from "@/components/AppIcon";
 import CustomIconButton from "@/components/CustomIconButton";
 import Dropdown, {
   type AppDropdownProps,
@@ -183,7 +184,7 @@ const Header: FC = () => {
       className="flex items-center justify-between p-3 pb-2"
       data-tauri-drag-region
     >
-      <img alt={t("header.logoAlt")} className="size-5" src="/logo.png" />
+      <AppIcon alt={t("header.logoAlt")} className="size-5" />
 
       <div className="flex items-center gap-1">
         <SearchInput

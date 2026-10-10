@@ -131,6 +131,15 @@ the date on short cards after moving the type into this column.
 
 ## Accessibility
 
+### Application Branding
+
+Use `AppIcon` for EcoPaste's own branding and clipboard-source fallback. It
+reads the Rust-owned `appearance.iconStyle` mirror and uses a transparent SVG
+mask with `currentColor`, so both outline and solid variants inherit theme
+contrast. Pass an explicit `iconStyle` only for intentional previews. Keep
+`AssetImage` for other applications' source icons. Do not reintroduce `/logo.png`
+at individual call sites or store a second icon preference in React.
+
 Use semantic roles and stable focus behavior where the UI is custom:
 
 - Clipboard cards use `role="option"` and `aria-selected`.

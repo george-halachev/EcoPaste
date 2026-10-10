@@ -75,6 +75,7 @@ pub enum OnboardingLegacyImportType {
 pub struct Appearance {
     pub theme: Theme,
     pub language: Language,
+    pub icon_style: IconStyle,
 }
 
 impl Default for Appearance {
@@ -82,8 +83,17 @@ impl Default for Appearance {
         Self {
             theme: Theme::Auto,
             language: Language::ZhCN,
+            icon_style: IconStyle::Outline,
         }
     }
+}
+
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum IconStyle {
+    #[default]
+    Outline,
+    Solid,
 }
 
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]

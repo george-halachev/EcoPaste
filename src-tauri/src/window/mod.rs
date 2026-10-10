@@ -118,6 +118,8 @@ pub fn show_window(app_handle: &AppHandle, label: &str) -> Result<()> {
         }
     }
 
+    crate::app_icon::apply_window(app_handle, label);
+
     if label == CLIPBOARD_WINDOW_LABEL {
         if let Err(err) = apply_clipboard_window_layout(app_handle) {
             log::warn!("apply clipboard window layout failed: {err}");

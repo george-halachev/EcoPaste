@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
+import AppIcon from "@/components/AppIcon";
 import OnboardingCard from "./OnboardingCard";
 import OnboardingStepLayout from "./OnboardingStepLayout";
 
@@ -18,13 +19,7 @@ const DoneStep: FC = () => {
     <OnboardingStepLayout
       contentClassName="grid grid-cols-3 gap-4"
       description={t("done.description")}
-      icon={
-        <img
-          alt={t("done.logoAlt")}
-          className="size-full rounded-3 object-contain"
-          src="/logo.png"
-        />
-      }
+      icon={<AppIcon alt={t("done.logoAlt")} className="size-full" />}
       iconClassName="size-14"
       title={t("done.title")}
     >

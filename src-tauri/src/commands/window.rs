@@ -26,6 +26,7 @@ pub async fn toggle_window(app: AppHandle, label: String) -> Result<()> {
 /// label 由前端取自身窗口传入，避免硬编码。
 #[tauri::command]
 pub async fn notify_window_ready(app: AppHandle, label: String) {
+    crate::app_icon::apply_window(&app, &label);
     window::lifecycle::on_ready(&app, &label);
 }
 

@@ -1,4 +1,5 @@
 mod admin;
+mod app_icon;
 mod autostart;
 mod backup;
 mod clipboard;
@@ -229,6 +230,9 @@ pub fn run() {
                 log::error!("tray initialization failed: {err:?}");
             }
 
+            app_icon::apply(&handle, &settings);
+            app_icon::watch_system_theme(&handle);
+
             // 平台剪贴板窗口初始化：macOS 转 NSPanel
             #[cfg(target_os = "macos")]
             if let Err(err) = window::macos::setup_clipboard_panel(&handle) {
@@ -266,6 +270,12 @@ pub fn run() {
             Ok(())
         })
         .on_window_event(|window, event| {
+            if let WindowEvent::ThemeChanged(_) = event {
+                if let Some(settings) = window.app_handle().try_state::<settings::SettingsStore>() {
+                    app_icon::apply(window.app_handle(), &settings.snapshot());
+                }
+            }
+
             if let WindowEvent::CloseRequested { api, .. } = event {
                 if window::intercept_close_request(window) {
                     api.prevent_close();

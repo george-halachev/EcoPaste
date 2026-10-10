@@ -1,13 +1,12 @@
 //! 系统托盘：Rust 侧实现。
 //!
-//! - icon 沿用 `assets/tray.ico`（Windows）/ `assets/tray-mac.ico`（macOS），作为 Tauri 资源打包。
+//! - icon 由 `app_icon` 按已保存的样式生成；Windows 跟随系统主题，macOS 使用 template 图像。
 //! - 菜单文案做 i18n，跟随 `Appearance.language` 即时切换（见 [`crate::i18n::tray`]）。
 //! - 显隐跟随 `General.tray_icon`；语言或显隐变更后由 `commands/settings.rs` 调用 [`apply`] 同步。
 
 use anyhow::Context;
 use tauri::image::Image;
 use tauri::menu::{Menu, MenuBuilder, MenuItem, PredefinedMenuItem};
-use tauri::path::BaseDirectory;
 use tauri::tray::TrayIconBuilder;
 #[cfg(target_os = "windows")]
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconEvent};
@@ -41,7 +40,7 @@ pub fn init(app: &AppHandle, settings: &Settings) -> Result<()> {
         .map(|s| s.is_paused())
         .unwrap_or(false);
 
-    let icon = load_icon(app)?;
+    let icon = crate::app_icon::tray_image(settings.appearance.icon_style)?;
     let menu = build_menu(app, lang, &version, paused)?;
 
     let tray = TrayIconBuilder::with_id(TRAY_ID)
@@ -115,17 +114,12 @@ fn rebuild_menu(app: &AppHandle) -> Result<()> {
     Ok(())
 }
 
-fn load_icon(app: &AppHandle) -> Result<Image<'static>> {
-    let relative = if cfg!(target_os = "macos") {
-        "assets/tray-mac.ico"
-    } else {
-        "assets/tray.ico"
-    };
-    let path = app
-        .path()
-        .resolve(relative, BaseDirectory::Resource)
-        .with_context(|| format!("resolve tray icon resource {relative}"))?;
-    Ok(Image::from_path(&path).with_context(|| format!("load tray icon from {path:?}"))?)
+/// Refreshes the application identity without rebuilding its menu or visibility.
+pub fn set_icon(app: &AppHandle, icon: Image<'static>) -> Result<()> {
+    if let Some(tray) = app.tray_by_id(TRAY_ID) {
+        tray.set_icon(Some(icon)).context("update tray icon")?;
+    }
+    Ok(())
 }
 
 fn build_menu(

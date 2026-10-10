@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import type { StorageUsage } from "@/commands";
+import AppIcon from "@/components/AppIcon";
 import { cn } from "@/utils/cn";
 import { isMac } from "@/utils/is";
 import { preferenceTabs } from "../config/preferenceSchema";
@@ -47,12 +48,7 @@ const PreferenceSidebar: FC<PreferenceSidebarProps> = (props) => {
           "pt-10": isMac,
         })}
       >
-        <img
-          alt=""
-          className="size-10 shrink-0 object-contain"
-          draggable={false}
-          src="/logo.png"
-        />
+        <AppIcon alt="" className="size-10 shrink-0 object-contain" />
         <div className="flex h-full flex-col justify-between">
           <div className="font-semibold text-ant-text text-base leading-none">
             {appNameLabel}

@@ -58,8 +58,17 @@ const App: FC = () => {
       ? "dark"
       : settings.appearance.theme;
   const language = settings.appearance.language;
+  const iconStyle = settings.appearance.iconStyle;
   const antdTheme = useAppTheme(mode);
   const locale = resolveAntdLocale(language);
+
+  useEffect(() => {
+    const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (favicon) {
+      favicon.href = `/icons/ecopaste-${iconStyle}-neutral.png`;
+      favicon.type = "image/png";
+    }
+  }, [iconStyle]);
 
   useEffect(() => {
     document.documentElement.lang = language;

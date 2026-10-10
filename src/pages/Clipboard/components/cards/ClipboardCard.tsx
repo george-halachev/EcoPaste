@@ -2,13 +2,13 @@ import type { DragEvent, FC, MouseEvent, PointerEvent, Ref } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { popupClipboardItemMenu, startDragClipboardItem } from "@/commands";
+import AppIcon from "@/components/AppIcon";
 import AssetImage from "@/components/AssetImage";
 import KeyHint from "@/components/KeyHint";
 import type { ItemActionLabels } from "@/constants/itemActions";
 import type { ClipboardAction, ClipboardItem } from "@/types/clipboard";
 import type { ItemAction } from "@/types/settings";
 import { cn } from "@/utils/cn";
-import { isMac } from "@/utils/is";
 import ClipboardQuickActions from "./ClipboardQuickActions";
 import FilesCard from "./FilesCard";
 import ImageCard from "./ImageCard";
@@ -84,19 +84,16 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
   const body = renderBody(item, isLinkActive, onOpenLink);
   const showSensitiveIndicator = item.isSensitive && item.kind === "text";
   const showStatusIndicators = item.isPinned || showSensitiveIndicator;
-  const sourceAppIcon = sourceAppId ? (
-    <AssetImage
-      alt={sourceAppName}
-      className="size-4"
-      src={sourceAppIconPath}
-    />
-  ) : (
-    <img
-      alt="EcoPaste"
-      className="pointer-events-none size-4"
-      src={isMac ? "/logo-mac.png" : "/logo.png"}
-    />
-  );
+  const sourceAppIcon =
+    sourceAppId && sourceAppName !== "EcoPaste" ? (
+      <AssetImage
+        alt={sourceAppName}
+        className="size-4"
+        src={sourceAppIconPath}
+      />
+    ) : (
+      <AppIcon alt="EcoPaste" className="pointer-events-none size-4" />
+    );
 
   const handleDragStart = async (event: DragEvent) => {
     event.preventDefault();

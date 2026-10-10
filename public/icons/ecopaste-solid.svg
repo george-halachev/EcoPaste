@@ -1,0 +1,6 @@
+<svg fill="currentColor" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg" >
+  <title>EcoPaste solid icon</title>
+  <path d="M12 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Zm0 4a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" fill-rule="evenodd" />
+  <path d="M4.5 10.5h4V20a2 2 0 0 1-4 0Z"/>
+  <circle cx="12" cy="10.5" r="1.25"/>
+</svg>
