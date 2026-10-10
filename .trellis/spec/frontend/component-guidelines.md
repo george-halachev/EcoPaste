@@ -117,8 +117,9 @@ browser drag default and lets Rust own platform drag behavior.
 
 ## Clipboard Card Metadata
 
-`ClipboardCard` uses a flexible `min-w-0` left column for the source-app icon and
-content. A separate right-aligned column places the translated clip type above
+`ClipboardCard` uses a flexible `min-w-0` left column only for clip content or
+notes, without a metadata header. A separate right-aligned column places the
+source-app icon (including its `KeyHint`) beside the translated clip type above
 `ClipboardQuickActions`. Keep the type visible when hover replaces the date
 with actions. Verify both a wide window and the 360px minimum width, including
 long dates and note/original transitions, because action width reduces the

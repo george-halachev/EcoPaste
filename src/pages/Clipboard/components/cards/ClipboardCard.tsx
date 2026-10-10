@@ -156,16 +156,6 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
       tabIndex={-1}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex h-6 items-center">
-          {hintKey ? (
-            <KeyHint hintKey={hintKey} onKeyPress={onQuickPaste}>
-              {sourceAppIcon}
-            </KeyHint>
-          ) : (
-            sourceAppIcon
-          )}
-        </div>
-
         {item.note ? (
           <NoteContentSwitcher
             note={item.note}
@@ -179,7 +169,17 @@ const ClipboardCard: FC<ClipboardCardProps> = (props) => {
       </div>
 
       <div className="flex max-w-1/2 shrink-0 flex-col items-end gap-1 text-right text-ant-secondary text-xs">
-        <div className="flex h-6 max-w-full items-center">
+        <div className="flex h-6 max-w-full items-center gap-1">
+          <div className="shrink-0">
+            {hintKey ? (
+              <KeyHint hintKey={hintKey} onKeyPress={onQuickPaste}>
+                {sourceAppIcon}
+              </KeyHint>
+            ) : (
+              sourceAppIcon
+            )}
+          </div>
+
           <span className="truncate" title={typeLabel}>
             {typeLabel}
           </span>

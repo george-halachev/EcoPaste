@@ -7,7 +7,7 @@ releases. The initial base is `v1.1.0` (commit
 ## Repository
 
 - Local checkout: `V:\Repos\EcoPaste`
-- `origin`: `https://github.com/george-halachev/EcoPaste-1.git`
+- `origin`: `https://github.com/george-halachev/EcoPaste.git`
 - `upstream`: `https://github.com/EcoPasteHub/EcoPaste.git`
 - Custom branch: `george-custom`
 - Conflict-resolution recording: `git config rerere.enabled true`
@@ -28,10 +28,17 @@ pnpm tsc
 node node_modules/@tauri-apps/cli/tauri.js build --config src-tauri/tauri.custom.conf.json --bundles nsis -- --locked
 ```
 
-The custom overlay marks the build as `1.1.0+1` (custom rebuild 1) and disables creation of
+The custom overlay marks the build as `1.1.0+2` (custom rebuild 2) and disables creation of
 signed updater artifacts. This allows a local installer build without upstream's
 private signing key. The EXE and NSIS installer are under
 `src-tauri/target/release/` and `src-tauri/target/release/bundle/nsis/`.
+
+Building does not update the installed application. The source stays in
+`V:\Repos\EcoPaste`; generated frontend assets go into `dist`, and the compiled
+EXE and installer go into `src-tauri\target`. Running the installer is a separate
+step that replaces the installed program under `C:\Program Files\EcoPaste`.
+The installed folder contains compiled application files, not the source tree.
+Clipboard history and settings live separately in the active data directory.
 
 Keep build metadata numeric: Windows uses it as the fourth executable version
 component. A textual suffix such as `+george.1` is replaced with zero by NSIS.
@@ -98,7 +105,7 @@ hashes differ even when the remaining executable bytes are identical.
 
 ## Initial customization
 
-`ClipboardCard` keeps the source-app icon and content in its flexible left
-column. Its right column shows the existing translated type label above
+`ClipboardCard` reserves its flexible left column for clip content or notes.
+Its right column shows the source-app icon beside the translated type label above
 `ClipboardQuickActions`, which shows the date at rest and action buttons on
 hover. Capture, storage, and database contracts are unchanged.
