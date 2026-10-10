@@ -38,3 +38,36 @@ Forked the official repository, based george-custom on v1.1.0, documented manual
 ### Next Steps
 
 - None - task complete
+
+
+## Session 2: Move source icon into right metadata column
+
+**Date**: 2026-10-10
+**Task**: Move source icon into right metadata column
+**Branch**: `george-custom`
+
+### Summary
+
+Installed 1.1.0+2; left column reserved for clips. Lint, types, release and 920/360px fixture checks passed, including Ctrl+1 hint/callback. Preserved all 6171 history IDs and settings. Native inspection stopped by user Escape. Updated renamed fork remote.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `HEAD~1` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
